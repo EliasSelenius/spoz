@@ -1,0 +1,101 @@
+
+spoz = spore + spaz
+
+
+progress ladder:
+    next:
+        fly simple ship around in asteroid field, and have blasters go pew pew.
+        - ship controller
+        - ship blaster
+        - asteroid that explodes
+
+    next:
+        minimal procedural solarsystem
+        - basic asteroid fields
+        - select travel location
+
+	next:
+        - basic space stations
+
+    next: 
+        dock with station to create/modify/switch ship
+
+    next:
+        spore-like ship editor
+        prerequisits: learn uv stuff in blender
+        and create kitbash of ship parts
+            - cockpit
+            - engine
+            - hull
+            - wings
+            - blaster
+        
+
+    next:
+        minimal procedural galaxy
+        - the spiral shape
+        - select star to view
+        
+	next:
+		ship AI behaviours:
+			- attack other
+			- goto destination (follow, patrol route)
+
+
+
+Game world:
+
+	sectors (points of interest):
+		space stations:
+			civilian
+			mining 
+			factory
+			pirate
+		asteroid field
+			rock/metal asteroids (mining)
+			ice asteroids
+			crystal asteroids
+		scrap yard (remains of battle ships)
+		missions/events:
+			find artifact(s)
+			help civilians with pirates
+			assist/raid convoys 
+			battlefield
+			capture region from enemy controll
+
+
+weapons/tools IDEAs:
+	- gravity missile
+	  homes in on target using a force that works just like gravity
+	
+	- gravity well
+	  small black hole canon
+	
+	- grapling hook
+	  attach a chain beetwen you and the grapelled
+	
+	- fetch beam
+	  a beam that automaticly fetches nearby loot
+
+	- blaster
+	  just a regular blaster
+
+	- laser
+
+	mines:
+		- tesla mine
+		  electricutes nearby enemies
+
+		- explosive mine
+		  homes in on nearby targets and explodes
+
+
+
+inspiration:
+	- Spore
+	- Spaz
+	- Galaxy on fire
+	- hades' star
+	- Rodina
+
+

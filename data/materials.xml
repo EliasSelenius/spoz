@@ -1,0 +1,7 @@
+<assets>
+    <material name="sun">
+        <albedo>255 243 105</albedo>
+        <metallic>0</metallic>
+        <roughness>0</roughness>
+    </material>
+</assets>
