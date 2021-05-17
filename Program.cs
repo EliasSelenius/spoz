@@ -19,7 +19,7 @@ namespace spoz {
 
             testScene();
             
-            
+            ShipEditor.open();
             /*Scene.active.dirlights.Add(new Dirlight {
                 dir = new vec3(7, 4, 5).normalized()
             });*/
@@ -41,6 +41,9 @@ namespace spoz {
                         materials = new[] {
                             PBRMaterial.defaultMaterial
                         }
+                    },
+                    new SphereCollider {
+                        radius = 10f
                     }
                 );
                 g.transform.position = pos;

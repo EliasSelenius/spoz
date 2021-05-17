@@ -4,10 +4,10 @@ using Engine;
 
 static class Player {
     static Gameobject camera;
-    static Gameobject ship;
+    public readonly static Gameobject ship;
     
     static Player() {
-        ship = new Gameobject(new ShipController(), new PlayerController());
+        ship = new Gameobject(new ShipController(), new PlayerController(), new SphereCollider {radius = 5f});
         //var playerMesh = Assets.getPrefab("spoz.data.models.TheFrog.Cube").createInstance(); 
         var playerMesh = Assets.getPrefab("spoz.data.models.kitbash.sample").createInstance();
         playerMesh.transform.rotate(vec3.unity, math.pi);
@@ -52,15 +52,15 @@ class PlayerController : Component {
     protected override void onUpdate() {
         
         // wasd move controll:
-        sc.input(transform.forward * Keyboard.getAxis(key.S, key.W) + transform.left * Keyboard.getAxis(key.D, key.A));
 
+        sc.input(Keyboard.getAxis(key.S, key.W));
 
         if (!Keyboard.isDown(key.LeftAlt)) {
             var mousedelta = Mouse.delta;
             sc.rotate(
                 yaw: mousedelta.x,
                 pitch: -mousedelta.y,
-                roll: Keyboard.getAxis(key.E, key.Q)
+                roll: Keyboard.getAxis(key.D, key.A)
             );
         }
 

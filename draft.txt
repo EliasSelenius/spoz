@@ -17,11 +17,9 @@ progress ladder:
 	next:
         - basic space stations
 
-    next: 
-        dock with station to create/modify/switch ship
 
     next:
-        spore-like ship editor
+        spore/ksp-like ship editor
         prerequisits: learn uv stuff in blender
         and create kitbash of ship parts
             - cockpit
@@ -30,6 +28,8 @@ progress ladder:
             - wings
             - blaster
         
+    next: 
+        dock with station to create/modify/switch ship
 
     next:
         minimal procedural galaxy

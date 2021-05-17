@@ -5,17 +5,17 @@ class ShipController : Component {
 
     Rigidbody rb;
 
-    vec3 inputDir;
+    float inputScaler;
     vec3 yawPitchRoll;
 
     float shipTorque = 0.01f;
     float thrustForce = 100f;
     float maxSpeed = 60;
 
-    public void input(vec3 dir) {
-        if (dir.sqlength < 0.1f) inputDir = vec3.zero;
-        else inputDir = dir.normalized();
+    public void input(float dir) {
+        inputScaler = dir;
     }
+
     public void rotate(float yaw, float pitch, float roll) {
         // note: angle must be in [-1 .. 1] range
         yawPitchRoll = (yaw, pitch, roll);
@@ -37,7 +37,7 @@ class ShipController : Component {
         var torque = shipTorque * Application.deltaTime;
 
         // thrust input
-        rb.addForce(inputDir * force);
+        rb.addForce(transform.forward * inputScaler * force);
 
 
         // yaw
