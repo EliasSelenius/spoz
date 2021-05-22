@@ -6,7 +6,8 @@ class ShipController : Component {
     Rigidbody rb;
 
     float inputScaler;
-    vec3 yawPitchRoll;
+
+    public float yaw, pitch, roll;
 
     float shipTorque = 0.01f;
     float thrustForce = 100f;
@@ -18,7 +19,7 @@ class ShipController : Component {
 
     public void rotate(float yaw, float pitch, float roll) {
         // note: angle must be in [-1 .. 1] range
-        yawPitchRoll = (yaw, pitch, roll);
+        (this.yaw, this.pitch, this.roll) = (yaw, pitch, roll);
 
         /*var absyaw = math.abs(yaw);
         if (absyaw > 1f) yawPitchRoll.x /= absyaw;
@@ -41,11 +42,11 @@ class ShipController : Component {
 
 
         // yaw
-        rb.addTorque(transform.up, yawPitchRoll.x * torque);
+        rb.addTorque(transform.up, yaw * torque);
         // pitch
-        rb.addTorque(transform.left, yawPitchRoll.y * torque);
+        rb.addTorque(transform.left, pitch * torque);
         // roll
-        rb.addTorque(transform.forward, yawPitchRoll.z * torque);
+        rb.addTorque(transform.forward, roll * torque);
 
 
         // clamp to maxspeed

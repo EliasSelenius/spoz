@@ -55,13 +55,13 @@ class PlayerController : Component {
 
         sc.input(Keyboard.getAxis(key.S, key.W));
 
+        sc.roll = Keyboard.getAxis(key.D, key.A);
+
+
         if (!Keyboard.isDown(key.LeftAlt)) {
             var mousedelta = Mouse.delta;
-            sc.rotate(
-                yaw: mousedelta.x,
-                pitch: -mousedelta.y,
-                roll: Keyboard.getAxis(key.D, key.A)
-            );
+            mousedelta.y *= -1;
+            (sc.yaw, sc.pitch) = mousedelta;
         }
 
 
