@@ -19,7 +19,10 @@ namespace spoz {
 
             testScene();
             
-            ShipEditor.open();
+            //ShipEditor.open();
+
+            ParticleRenderer.init();
+
             /*Scene.active.dirlights.Add(new Dirlight {
                 dir = new vec3(7, 4, 5).normalized()
             });*/
