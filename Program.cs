@@ -2,8 +2,12 @@
 using Engine;
 using Nums;
 
+
 namespace spoz {
     class Program {
+
+        public static Scene testScene;
+
         static void Main(string[] args) => Application.run(load);
         static void load() {
             Assets.load(new EmbeddedResourceProvider(typeof(Program).Assembly));
@@ -17,11 +21,10 @@ namespace spoz {
             var ss = new SolarSystem(0);
             ss.view();
 
-            testScene();
+            createTestScene();
             
-            //ShipEditor.open();
+            ShipEditor.open();
 
-            ParticleRenderer.init();
 
             /*Scene.active.dirlights.Add(new Dirlight {
                 dir = new vec3(7, 4, 5).normalized()
@@ -30,8 +33,8 @@ namespace spoz {
         }
 
 
-        static void testScene() {
-            var s = new Scene();
+        static void createTestScene() {
+            var s = testScene = new Scene();
             Scene.active = s;
 
             Player.enterScene(s);

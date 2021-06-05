@@ -10,8 +10,12 @@ static class Player {
         ship = new Gameobject(new ShipController(), new PlayerController(), new SphereCollider {radius = 5f});
         //var playerMesh = Assets.getPrefab("spoz.data.models.TheFrog.Cube").createInstance(); 
         var playerMesh = Assets.getPrefab("spoz.data.models.kitbash.sample").createInstance();
-        playerMesh.transform.rotate(vec3.unity, math.pi);
-        playerMesh.transform.rotate(vec3.unitx, -math.pi / 2f);
+        //playerMesh.transform.rotate(vec3.unity, math.pi);
+        //playerMesh.transform.rotate(vec3.unitx, -math.pi / 2f);
+        var rot = quat.fromAxisangle(vec3.unity, math.pi) * quat.fromAxisangle(vec3.unitx, -math.pi / 2f);
+        rot.normalize();
+        playerMesh.transform.rotate(rot);
+
         ship.addChild(playerMesh);
         ship.transform.rotation = quat.identity;
 
@@ -69,6 +73,8 @@ class PlayerController : Component {
 
         //MyMath.slerp(transform.rotation, scene.camera.transform.rotation, Application.deltaTime * 10f, out transform.rotation);
         
+
+        if (Keyboard.isPressed(key.Escape)) ShipEditor.open();
 
 
     }
