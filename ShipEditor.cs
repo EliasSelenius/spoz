@@ -54,13 +54,29 @@ class ShipEditor : Component {
         }
 
         if (objToBePlaced == null) {
-            objToBePlaced = parts.ElementAt(0).Value.createInstance();
+            objToBePlaced = parts["wing"].createInstance();
             objToBePlaced.transform.rotate(quat.fromAxisangle(vec3.unity, math.pi) * quat.fromAxisangle(vec3.unitx, -math.pi / 2f));
             objToBePlaced.enterScene(scene);
         } else {
 
             ScreenRaycast.onHit(hit => {
                 objToBePlaced.transform.position = hit.position;
+                
+
+                quat r = quat.fromAxisangle(vec3.unity, math.pi) * quat.fromAxisangle(vec3.unitx, -math.pi / 2f);
+                r.normalize();
+                objToBePlaced.transform.rotation = r;
+
+
+                var projNormal = hit.normal;
+                projNormal.z = 0;
+                projNormal.normalize();
+                var rotm = new mat3(-projNormal, projNormal.cross(vec3.unitz), vec3.unitz);
+                quat.fromMatrix(rotm, out r);
+                objToBePlaced.transform.rotate(r);
+
+                
+
                 if (Mouse.isPressed(MouseButton.left)) {
                     Player.ship.addChild(objToBePlaced);
                     objToBePlaced = null;
