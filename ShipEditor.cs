@@ -4,6 +4,13 @@ using Engine.Gui;
 using System.Collections.Generic;
 using System.Linq;
 
+/*
+    select parts
+    remove parts
+    snap points 
+    parts gui
+*/
+
 class ShipEditor : Component {
 
     static new Scene scene;
@@ -11,6 +18,9 @@ class ShipEditor : Component {
 
     static Gameobject objToBePlaced;
     static Dictionary<string, Prefab> parts;
+
+    
+    static bool isValidPlace;
 
     static ShipEditor() {
         scene = new();
@@ -25,7 +35,7 @@ class ShipEditor : Component {
 
         parts = Assets.colladaFiles["spoz.data.models.kitbash.dae"].prefabs;
 
-        ScreenRaycast.filter = r => r.gameobject != objToBePlaced;
+        ScreenRaycast.filter = r => r.gameobject.rootParent != objToBePlaced;
 
 
         scene.dirlights.Add(new Dirlight {
@@ -53,13 +63,41 @@ class ShipEditor : Component {
             Scene.active = spoz.Program.testScene;
         }
 
+
         if (objToBePlaced == null) {
-            objToBePlaced = parts["wing"].createInstance();
-            objToBePlaced.transform.rotate(quat.fromAxisangle(vec3.unity, math.pi) * quat.fromAxisangle(vec3.unitx, -math.pi / 2f));
-            objToBePlaced.enterScene(scene);
+
+            int i = 0;
+            foreach (var partKV in parts) {
+                int fontSize = 40;
+                var size = new vec2(Text.length(partKV.Key, 0, partKV.Key.Length, fontSize, Font.arial), fontSize);
+                var pos = new vec2(100, 50 + (size.y + 10) * i);
+                canvas.rect(pos, size, in color.white);
+                canvas.text(pos, Font.arial, fontSize, partKV.Key, in color.black);
+
+                if (Utils.insideBounds(Mouse.position - pos, size) && Mouse.isPressed(MouseButton.left)) {
+
+                    objToBePlaced = partKV.Value.createInstance();
+                    objToBePlaced.transform.rotate(quat.fromAxisangle(vec3.unity, math.pi) * quat.fromAxisangle(vec3.unitx, -math.pi / 2f));
+                    objToBePlaced.enterScene(scene);
+                }
+                i++;
+            }
+
         } else {
 
+            if (Mouse.isReleased(MouseButton.left)) {
+                if (isValidPlace) Player.ship.addChild(objToBePlaced);
+                else objToBePlaced.destroy();
+                objToBePlaced = null;
+            }
+
+            isValidPlace = false;
+
             ScreenRaycast.onHit(hit => {
+                isValidPlace = true;
+
+                if (objToBePlaced == null) return;
+
                 objToBePlaced.transform.position = hit.position;
                 
 
@@ -75,12 +113,6 @@ class ShipEditor : Component {
                 quat.fromMatrix(rotm, out r);
                 objToBePlaced.transform.rotate(r);
 
-                
-
-                if (Mouse.isPressed(MouseButton.left)) {
-                    Player.ship.addChild(objToBePlaced);
-                    objToBePlaced = null;
-                }
             });
         }
 
