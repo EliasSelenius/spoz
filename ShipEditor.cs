@@ -16,7 +16,7 @@ class ShipEditor : Component {
     static new Scene scene;
     static Canvas canvas = new(100, 100);
 
-    static Gameobject objToBePlaced;
+    static Gameobject selectedObj;
     static Dictionary<string, Prefab> parts;
 
     
@@ -35,7 +35,7 @@ class ShipEditor : Component {
 
         parts = Assets.colladaFiles["spoz.data.models.kitbash.dae"].prefabs;
 
-        ScreenRaycast.filter = r => r.gameobject.rootParent != objToBePlaced;
+        ScreenRaycast.filter = r => r.gameobject.rootParent != selectedObj;
 
 
         scene.dirlights.Add(new Dirlight {
@@ -64,8 +64,9 @@ class ShipEditor : Component {
         }
 
 
-        if (objToBePlaced == null) {
+        if (selectedObj == null) {
 
+            // GUI
             int i = 0;
             foreach (var partKV in parts) {
                 int fontSize = 40;
@@ -76,19 +77,28 @@ class ShipEditor : Component {
 
                 if (Utils.insideBounds(Mouse.position - pos, size) && Mouse.isPressed(MouseButton.left)) {
 
-                    objToBePlaced = partKV.Value.createInstance();
-                    objToBePlaced.transform.rotate(quat.fromAxisangle(vec3.unity, math.pi) * quat.fromAxisangle(vec3.unitx, -math.pi / 2f));
-                    objToBePlaced.enterScene(scene);
+                    selectedObj = partKV.Value.createInstance();
+                    selectedObj.transform.rotate(quat.fromAxisangle(vec3.unity, math.pi) * quat.fromAxisangle(vec3.unitx, -math.pi / 2f));
+                    selectedObj.enterScene(scene);
                 }
                 i++;
+            }
+
+
+            // select obj
+            if (Mouse.isPressed(MouseButton.left)) {
+                ScreenRaycast.onHit(hit => {
+                    selectedObj = hit.renderer.gameobject;
+                    selectedObj.parent?.removeChild(selectedObj);
+                });
             }
 
         } else {
 
             if (Mouse.isReleased(MouseButton.left)) {
-                if (isValidPlace) Player.ship.addChild(objToBePlaced);
-                else objToBePlaced.destroy();
-                objToBePlaced = null;
+                if (isValidPlace) Player.ship.addChild(selectedObj);
+                else selectedObj.destroy();
+                selectedObj = null;
             }
 
             isValidPlace = false;
@@ -96,14 +106,14 @@ class ShipEditor : Component {
             ScreenRaycast.onHit(hit => {
                 isValidPlace = true;
 
-                if (objToBePlaced == null) return;
+                if (selectedObj == null) return;
 
-                objToBePlaced.transform.position = hit.position;
+                selectedObj.transform.position = hit.position;
                 
 
                 quat r = quat.fromAxisangle(vec3.unity, math.pi) * quat.fromAxisangle(vec3.unitx, -math.pi / 2f);
                 r.normalize();
-                objToBePlaced.transform.rotation = r;
+                selectedObj.transform.rotation = r;
 
 
                 var projNormal = hit.normal;
@@ -111,7 +121,7 @@ class ShipEditor : Component {
                 projNormal.normalize();
                 var rotm = new mat3(-projNormal, projNormal.cross(vec3.unitz), vec3.unitz);
                 quat.fromMatrix(rotm, out r);
-                objToBePlaced.transform.rotate(r);
+                selectedObj.transform.rotate(r);
 
             });
         }
