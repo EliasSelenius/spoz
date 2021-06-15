@@ -18,12 +18,20 @@ namespace spoz {
                 Assets.meshes.Add("sphere", m);
             }
 
+            int seed = 0;
             var ss = new SolarSystem(0);
             ss.view();
 
-            createTestScene();
+            Keyboard.onKeyPressed += (key, mod) => {
+                if (key == key.L) {
+                    ss = new(seed++);
+                    ss.view();
+                }
+            };
+
+            //createTestScene();
             
-            ShipEditor.open();
+            //ShipEditor.open();
 
 
             /*Scene.active.dirlights.Add(new Dirlight {
