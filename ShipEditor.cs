@@ -16,7 +16,7 @@ class ShipEditor : Component {
     static new Scene scene;
     static Canvas canvas = new(100, 100);
 
-    static Gameobject selectedObj;
+    static Gameobject selectedObj, selectedObjParent;
     static Dictionary<string, Prefab> parts;
 
     
@@ -54,6 +54,8 @@ class ShipEditor : Component {
         //Player.ship.getComponent<ShipController>().disable();
         //Player.ship.getComponent<PlayerController>().disable();
         foreach (var c in Player.ship.components) c.disable();
+
+        selectedObjParent = Player.ship;
     }
 
 
@@ -89,27 +91,56 @@ class ShipEditor : Component {
             if (Mouse.isPressed(MouseButton.left)) {
                 ScreenRaycast.onHit(hit => {
                     selectedObj = hit.renderer.gameobject;
-                    selectedObj.parent?.removeChild(selectedObj);
+                    
+                    // fancy matrix math to preserve the transform of child object
+                    var parent = selectedObj.parent;
+                    parent.calcModelMatrix(out mat4 p);
+                    selectedObj.transform.getMatrix(out mat4 c);
+                    c *= p;
+                    selectedObj.transform.setMatrix(in c);
+                    
+                    
+                    parent.removeChild(selectedObj);
+
+                    
+
                 });
             }
 
         } else {
 
+            if (!isValidPlace) {
+                // TODO: place object under cursor
+                //selectedObj.transform.position = (new vec4(Mouse.ndcPosition, 1f, 1f) * scene.camera.viewMatrix).xyz;
+            }
+
             if (Mouse.isReleased(MouseButton.left)) {
-                if (isValidPlace) Player.ship.addChild(selectedObj);
-                else selectedObj.destroy();
+                if (isValidPlace) {
+
+                    // fancy matrix math to preserve the transform of child object
+                    selectedObjParent.calcModelMatrix(out mat4 p);
+                    Utils.invert(in p, out p);
+                    selectedObj.transform.getMatrix(out mat4 c);
+                    c *= p;
+                    selectedObj.transform.setMatrix(in c);
+
+                    selectedObjParent.addChild(selectedObj);
+
+
+                } else selectedObj.destroy();
                 selectedObj = null;
+                selectedObjParent = Player.ship;
             }
 
             isValidPlace = false;
 
             ScreenRaycast.onHit(hit => {
                 isValidPlace = true;
+                selectedObjParent = hit.renderer.gameobject;
 
                 if (selectedObj == null) return;
 
                 selectedObj.transform.position = hit.position;
-                
 
                 quat r = quat.fromAxisangle(vec3.unity, math.pi) * quat.fromAxisangle(vec3.unitx, -math.pi / 2f);
                 r.normalize();
