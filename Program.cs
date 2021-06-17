@@ -18,7 +18,7 @@ namespace spoz {
                 Assets.meshes.Add("sphere", m);
             }
 
-            int seed = 0;
+            int seed = 1;
             var ss = new SolarSystem(0);
             ss.view();
 

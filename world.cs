@@ -49,10 +49,21 @@ class SolarSystem {
 
 
         // planets:
-        int planetCount = (int)range(3, 10);
+
+
         float accDist = 1; // sun radius
-        for (int i = 0; i < planetCount; i++) {
-            scene.createObject(new Planet(this, i, ref accDist));
+        for (int i = 1; i <= 10; i++) {
+            accDist += 3f + rand() * 1.5f;
+
+            float r = rand01();
+
+            if (r < 0.5f) scene.createObject(new Planet(this, accDist));
+            else if (r < 0.9f) scene.createObject(new MeshRenderer {
+                mesh = Assets.getMesh("sphere"),
+                materials = new[] {
+                    PBRMaterial.redPlastic
+                }
+            }).transform.position = (accDist, 0, 0);
         }
 
     }
@@ -76,15 +87,14 @@ class Planet : Component {
 
     public float angle, distance, radius;
 
-    public Planet(SolarSystem ss, int planetIndex, ref float accDist) {
+    public Planet(SolarSystem ss, float dist) {
         this.ss = ss;
 
         radius = ss.range(planetMinSize, planetMaxSize);
 
         angle = ss.range(0, math.tau);
 
-        //distance = 3 + planetIndex * 3;
-        distance = accDist += radius * (4 + ss.range(0, 3));
+        distance = dist;
     }
 
     protected override void onStart() {
@@ -120,10 +130,18 @@ class Planet : Component {
 class Sector {
     Scene scene;
 
+
     void generate() {
         scene = new();
 
 
+    }
+
+    public void travel() {
+        if (scene == null) generate();
+
+        Scene.active = scene;
+        Player.enterScene(scene);
     }
 
 }
