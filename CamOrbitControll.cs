@@ -11,6 +11,10 @@ class CamOrbitControll : Component {
 
     vec2 camangle;
 
+    protected override void onEnter() {
+        target = null;
+    }
+
     protected override void onUpdate() {
 
         if (Mouse.isDown(MouseButton.right)) {

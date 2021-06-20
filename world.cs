@@ -1,4 +1,5 @@
 using Engine;
+
 using Nums;
 using System;
 using System.Collections.Generic;
@@ -12,6 +13,7 @@ class SolarSystem {
     readonly List<Sector> sectors = new();
     
     Scene scene;
+    public readonly ColliderCollection selectables = new();
     Gameobject sun;
     bool isGenerated => scene != null;
 
@@ -29,6 +31,7 @@ class SolarSystem {
         accSeed = seed;
     }
 
+
     void generate() {
         scene = new();
 
@@ -44,7 +47,8 @@ class SolarSystem {
             },
             new Pointlight {
                 color = sunColor.xyz * 100f
-            }
+            },
+            new Sun(this)
         );
 
 
@@ -76,6 +80,18 @@ class SolarSystem {
         Scene.active = scene;
     }
 
+}
+
+
+class Sun : Component {
+    SolarSystem ss;
+    public Sun(SolarSystem ss) => this.ss = ss;    
+    protected override void onUpdate() {
+        if (Mouse.isPressed(MouseButton.left)) {
+            scene.camera.screenToRay(Mouse.ndcPosition, out vec3 dir);
+            scene.camera.gameobject.getComponent<CamOrbitControll>().target = ss.selectables.raycast(in scene.camera.transform.position, in dir)?.transform;
+        }
+    }
 }
 
 class Planet : Component {
@@ -111,6 +127,12 @@ class Planet : Component {
                 roughness = 0.7f
             }
         };
+
+
+        var col = gameobject.requireComponent<SphereCollider>();
+        col.radius = radius;
+        ss.selectables.add(col);
+
     }
 
     protected override void onUpdate() {

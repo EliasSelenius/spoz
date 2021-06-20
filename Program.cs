@@ -29,9 +29,9 @@ namespace spoz {
                 }
             };
 
-            //createTestScene();
+            createTestScene();
             
-            //ShipEditor.open();
+            ShipEditor.open();
 
 
             /*Scene.active.dirlights.Add(new Dirlight {
