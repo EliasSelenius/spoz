@@ -91,7 +91,7 @@ class ShipEditor : Component {
             if (Mouse.isPressed(MouseButton.left)) {
                 ScreenRaycast.onHit(hit => {
                     selectedObj = hit.renderer.gameobject;
-                    
+
                     // fancy matrix math to preserve the transform of child object
                     var parent = selectedObj.parent;
                     parent.calcModelMatrix(out mat4 p);

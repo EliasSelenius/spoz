@@ -1,4 +1,4 @@
 <assets>
-    <shader name="particle" vertsrc="spoz.data.shaders.particle.vert.glsl" fragsrc="spoz.data.shaders.particle.frag.glsl" />
+    <!--<shader name="particle" vertsrc="spoz.data.shaders.particle.vert.glsl" fragsrc="spoz.data.shaders.particle.frag.glsl" />-->
 
 </assets>
