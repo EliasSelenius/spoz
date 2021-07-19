@@ -5,10 +5,11 @@ using System.Collections.Generic;
 using System.Linq;
 
 /*
-    select parts
-    remove parts
     snap points 
-    parts gui
+    mirror
+    rotate part
+    scale part
+    part hilight
 */
 
 class ShipEditor : Component {

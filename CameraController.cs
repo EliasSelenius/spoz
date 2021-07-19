@@ -40,7 +40,8 @@ class CameraController : Component {
             lookpoint = target.position + target.forward * 30f;
         }
 
-        transform.position = math.lerp(in transform.position, in campos, 0.01f);
+        float t = Application.deltaTime * 4f; //0.01f;
+        transform.position = math.lerp(in transform.position, in campos, t);
 
         transform.lookat(in lookpoint, target.up);
 
