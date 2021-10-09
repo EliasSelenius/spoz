@@ -19,17 +19,19 @@ class ShipEditor : Component {
 
     static Gameobject selectedObj, selectedObjParent;
     static Dictionary<string, Prefab> parts;
-
-    
     static bool isValidPlace;
+    static readonly quat partStartingRotation;
 
     static ShipEditor() {
         scene = new();
         scene.createObject(new Camera { canvas = canvas }, new CamOrbitControll());
         scene.createObject(new ShipEditor());
 
-
         parts = Assets.colladaFiles["spoz.data.models.kitbash.dae"].prefabs;
+
+        // construct a rotation that converts from blenders-rotation to engine-rotation 
+        partStartingRotation = quat.fromAxisangle(vec3.unity, math.pi) * quat.fromAxisangle(vec3.unitx, -math.pi / 2f);
+        partStartingRotation.normalize();
 
         ScreenRaycast.filter = r => r.gameobject.rootParent != selectedObj;
 
@@ -117,10 +119,6 @@ class ShipEditor : Component {
 
                 selectedObj.transform.position = hit.position;
 
-                quat r = quat.fromAxisangle(vec3.unity, math.pi) * quat.fromAxisangle(vec3.unitx, -math.pi / 2f);
-                r.normalize();
-                selectedObj.transform.rotation = r;
-
 
                 // take surface normal of hit, and project it along the xy plane 
                 var projNormal = hit.normal;
@@ -136,14 +134,11 @@ class ShipEditor : Component {
                     projNormal.cross(vec3.unitz), 
                     projNormal, 
                     vec3.unitz);
+                quat.fromMatrix(rotm, out quat r);
 
-                quat.fromMatrix(rotm, out r);
+                selectedObj.transform.rotation = partStartingRotation;
                 selectedObj.transform.rotate(r);
-
             });
         }
-
     }
-
-
 }
